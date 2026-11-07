@@ -18,8 +18,11 @@ body {
 .center {
   min-height: 100dvh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
 }
 
 .center h1 {
@@ -30,5 +33,15 @@ body {
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: #111111;
+  text-align: center;
+}
+
+.center .subtitle {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: clamp(1.25rem, 4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.4;
+  color: #555555;
   text-align: center;
 }
