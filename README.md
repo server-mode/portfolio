@@ -45,8 +45,9 @@ components/
   reveal.tsx        hiệu ứng xuất hiện khi cuộn (IntersectionObserver)
   pixel-cover.tsx   ảnh bìa dự án vẽ bằng SVG pixel
 lib/i18n.ts         TOÀN BỘ nội dung VI/EN (sửa nội dung ở đây)
-public/gifs/        10 file GIF do scripts/make_gifs.py sinh ra
+public/gifs/        9 file GIF do scripts/make_gifs.py sinh ra
 public/fonts/       woff2 tự host theo subset latin/latin-ext/vietnamese
+public/assets/      ảnh thật: avatar (DSC01358-2.jpg) + ảnh lễ trao giải (DSC02593-web.jpg)
 scripts/
   make_gifs.py      sinh lại toàn bộ GIF pixel (Pillow)
   fetch-fonts.py    tải lại font từ Google Fonts (chỉ cần khi đổi font)
@@ -92,3 +93,10 @@ bitmap 5×7 tự viết, palette cố định, palette ảnh được lượng t
 
 Font: VT323, Press Start 2P, Inter, Space Mono (Google Fonts, OFL/Apache-2.0).
 GIF, ảnh bìa SVG và toàn bộ giao diện được tạo trong repo này.
+
+## Ảnh trong public/assets
+
+- `DSC01358-2.jpg` — ảnh chân dung dùng cho thẻ ID ở hero.
+- `DSC02593-web.jpg` — ảnh lễ trao giải Best Poster (đã thu nhỏ còn 1100px, ~171 KB).
+- File gốc `DSC02593.jpg` (~20 MB) được gitignore để nhẹ repo; muốn đổi ảnh thì thay file gốc rồi chạy lại lệnh thu nhỏ trong README hoặc dùng trực tiếp.
+
