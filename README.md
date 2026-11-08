@@ -63,9 +63,9 @@ Bài báo hiện có: **EPU-HEKV: Hierarchical External Memory for Bounded Activ
 (Asian Comnet 2026, Best Poster Award) — nằm trong `research.items`. Thêm bài mới bằng
 cách thêm một phần tử vào mảng đó (mỗi bài tự render thành một card).
 
-Thông tin cá nhân hiện tại là **nội dung mẫu do mình tự đặt** (tên, trường, GPA,
-kinh nghiệm, dự án, email, link mạng xã hội). Thay bằng thông tin thật trong `lib/i18n.ts`.
-Link mạng xã hội đang trỏ tới các handle giả lập — nhớ đổi trước khi deploy.
+Thông tin cá nhân (tên, trường, lớp, GPA, ảnh) là thông tin thật. Phần **dự án, số liệu
+trong paper (abstract, 42% token…) và link mạng xã hội** vẫn là nội dung mẫu — nhớ thay
+bằng dữ liệu thật trong `lib/i18n.ts` trước khi deploy.
 
 ## Tạo lại ảnh GIF / font
 
@@ -76,7 +76,7 @@ npm run fonts    # cần Internet; tải woff2 và ghi lại app/fonts.css
 
 `scripts/make_gifs.py` vẽ ở lưới pixel logic (mỗi pixel = 5px thiết bị) bằng một bộ font
 bitmap 5×7 tự viết, palette cố định, palette ảnh được lượng tử hoá nên GIF rất nhẹ
-(tổng khoảng 0.9 MB cho 10 ảnh). Muốn thêm ảnh mới: viết hàm `b_ten_anh(t, n)` rồi
+(tổng khoảng 0.87 MB cho 9 ảnh). Muốn thêm ảnh mới: viết hàm `b_ten_anh(t, n)` rồi
 đăng ký trong `BUILDERS`.
 
 ## Ghi chú kỹ thuật
@@ -97,6 +97,10 @@ GIF, ảnh bìa SVG và toàn bộ giao diện được tạo trong repo này.
 ## Ảnh trong public/assets
 
 - `DSC01358-2.jpg` — ảnh chân dung dùng cho thẻ ID ở hero.
-- `DSC02593-web.jpg` — ảnh lễ trao giải Best Poster (đã thu nhỏ còn 1100px, ~171 KB).
-- File gốc `DSC02593.jpg` (~20 MB) được gitignore để nhẹ repo; muốn đổi ảnh thì thay file gốc rồi chạy lại lệnh thu nhỏ trong README hoặc dùng trực tiếp.
+- `DSC02593-web.jpg` — ảnh lễ trao giải Best Poster (thu nhỏ còn 1100px, ~171 KB).
+- File gốc `DSC02593.jpg` (~20 MB) được gitignore để repo nhẹ. Khi thay ảnh mới, thu nhỏ lại bằng:
+
+```bash
+python -c "from PIL import Image; im = Image.open('public/assets/DSC02593.jpg'); w = 1100; im.resize((w, round(im.size[1]*w/im.size[0])), Image.LANCZOS).save('public/assets/DSC02593-web.jpg', quality=84, optimize=True, progressive=True)"
+```
 
