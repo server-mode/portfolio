@@ -7,3 +7,7 @@ build/
 !.env.example
 .DS_Store
 *.tsbuildinfo
+scripts/preview/
+
+# Ảnh gốc dung lượng lớn (bản dùng trên web: public/assets/DSC02593-web.jpg)
+public/assets/DSC02593.jpg

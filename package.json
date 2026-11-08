@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "assets": "python scripts/make_gifs.py",
+    "fonts": "python scripts/fetch-fonts.py"
   },
   "dependencies": {
     "next": "16.4.5",
