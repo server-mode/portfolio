@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Reveal from "./reveal";
+import PhotoViewer from "./photo-viewer";
 import { useLang } from "./lang-context";
 
 const INK = "#0b0b0f";
@@ -180,14 +181,13 @@ export default function Research() {
                 </p>
 
                 <figure className="paper__photo">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <PhotoViewer
                     src={item.photo}
+                    large={item.photoLarge}
                     alt={`${item.award} — ${item.venue}`}
-                    width={1100}
-                    height={733}
-                    loading="lazy"
-                    decoding="async"
+                    title={`${item.award} · ${item.venue}`}
+                    zoomLabel={t.research.labels.zoom}
+                    closeLabel={t.research.labels.close}
                   />
                   <figcaption className="media-cap">
                     <span>{t.research.labels.photoCap}</span>

@@ -1,11 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLang } from "./lang-context";
 
-const SECTIONS = ["about", "skills", "projects", "research", "journey", "contact"] as const;
+const HOME_SECTIONS = ["about", "skills", "projects", "research", "journey", "contact"] as const;
+const PAGES = [
+  { id: "productivity", href: "/productivity" },
+  { id: "stuff", href: "/stuff-i-make" },
+] as const;
 
 export default function Footer() {
   const { t, lang, setLang } = useLang();
+  const pathname = usePathname() ?? "/";
+  const isHome = pathname === "/";
 
   return (
     <footer className="site-footer">
@@ -25,7 +32,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer__main">
           <div>
-            <a href="#top" className="brand">
+            <a href="/" className="brand">
               <span className="brand__mark" aria-hidden="true">
                 {t.brand.mark}
               </span>
@@ -40,9 +47,14 @@ export default function Footer() {
           <div>
             <p className="footer__col-title">{t.footer.navTitle}</p>
             <nav className="footer__links" aria-label={t.footer.navTitle}>
-              {SECTIONS.map((id) => (
-                <a key={id} href={`#${id}`}>
+              {HOME_SECTIONS.map((id) => (
+                <a key={id} href={isHome ? `#${id}` : `/#${id}`}>
                   {t.nav[id]}
+                </a>
+              ))}
+              {PAGES.map((page) => (
+                <a key={page.id} href={page.href}>
+                  {t.nav[page.id]}
                 </a>
               ))}
             </nav>

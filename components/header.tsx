@@ -1,18 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useLang } from "./lang-context";
 
-const SECTIONS = ["about", "skills", "projects", "research", "journey", "contact"] as const;
+/** Home anchors + the two sub pages. Order defines the menu order. */
+const NAV = [
+  { id: "about", anchor: true },
+  { id: "projects", anchor: true },
+  { id: "research", anchor: true },
+  { id: "productivity", href: "/productivity" },
+  { id: "stuff", href: "/stuff-i-make" },
+  { id: "contact", anchor: true },
+] as const;
+
+const SPY_SECTIONS = ["about", "projects", "research", "contact"];
 
 export default function Header() {
   const { t, lang, setLang } = useLang();
+  const pathname = usePathname() ?? "/";
+  const isHome = pathname === "/";
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string>("");
+  const [spied, setSpied] = useState<string>("");
 
-  // Highlight the section currently crossing the middle of the viewport.
+  // Highlight the section crossing the middle of the viewport (home only).
   useEffect(() => {
-    const nodes = SECTIONS.map((id) => document.getElementById(id)).filter(
+    if (!isHome) {
+      setSpied("");
+      return;
+    }
+    const nodes = SPY_SECTIONS.map((id) => document.getElementById(id)).filter(
       (el): el is HTMLElement => Boolean(el),
     );
     if (!nodes.length || typeof IntersectionObserver === "undefined") return;
@@ -20,7 +37,7 @@ export default function Header() {
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting) setSpied(entry.target.id);
         }
       },
       { rootMargin: "-42% 0px -52% 0px", threshold: 0 },
@@ -29,7 +46,7 @@ export default function Header() {
     nodes.forEach((node) => io.observe(node));
 
     const onScroll = () => {
-      if (window.scrollY < 260) setActive("");
+      if (window.scrollY < 260) setSpied("");
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -38,7 +55,12 @@ export default function Header() {
       io.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [isHome]);
+
+  // Close the mobile panel when the route changes.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -49,12 +71,13 @@ export default function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const links = SECTIONS.map((id) => ({ id, label: t.nav[id] }));
+  const activeId =
+    pathname === "/productivity" ? "productivity" : pathname === "/stuff-i-make" ? "stuff" : spied;
 
   return (
     <header className="site-header">
       <div className="container site-header__inner">
-        <a href="#top" className="brand" aria-label={`${t.brand.name} — ${t.brand.role}`}>
+        <a href="/" className="brand" aria-label={`${t.brand.name} — ${t.brand.role}`}>
           <span className="brand__mark" aria-hidden="true">
             {t.brand.mark}
           </span>
@@ -65,18 +88,21 @@ export default function Header() {
         </a>
 
         <nav className="nav" id="site-nav" data-open={open} aria-label={t.nav.about}>
-          {links.map((link) => (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              className="nav__link"
-              data-active={active === link.id}
-              aria-current={active === link.id ? "true" : undefined}
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV.map((item) => {
+            const href = "href" in item ? item.href : isHome ? `#${item.id}` : `/#${item.id}`;
+            return (
+              <a
+                key={item.id}
+                href={href}
+                className="nav__link"
+                data-active={activeId === item.id}
+                aria-current={activeId === item.id ? "page" : undefined}
+                onClick={() => setOpen(false)}
+              >
+                {t.nav[item.id]}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="header__tools">
@@ -103,7 +129,7 @@ export default function Header() {
             </button>
           </div>
 
-          <a href="#contact" className="btn btn--primary header__cta">
+          <a href={isHome ? "#contact" : "/#contact"} className="btn btn--primary header__cta">
             {t.header.cta}
             <span className="btn__arrow" aria-hidden="true">
               →

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import SiteShell from "@/components/site-shell";
 import "./globals.css";
 import "./fonts.css";
 
@@ -46,7 +47,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi">
-      <body>{children}</body>
+      <body>
+        <SiteShell>{children}</SiteShell>
+      </body>
     </html>
   );
 }

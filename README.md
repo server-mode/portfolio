@@ -10,7 +10,7 @@ Website portfolio cá nhân phong cách **pixel art lai Google web**: nền tr�
 
 ![Giao diện trang chủ](docs/preview-hero.png)
 
-_Xem thêm: [mục nghiên cứu khoa học](docs/preview-research.png) · [toàn bộ trang](docs/preview-full.png)._
+_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.png) · [Stuff I Make](docs/preview-stuff.png) · [toàn bộ trang chủ](docs/preview-full.png)._
 
 ## Chạy dự án
 
@@ -25,47 +25,75 @@ npm run start    # chạy bản build
 
 ```
 app/
-  layout.tsx        metadata, viewport, nạp CSS
-  page.tsx          render <Portfolio />
-  globals.css       toàn bộ design system (token, layout, component, responsive)
-  fonts.css         @font-face tự sinh, trỏ tới public/fonts
-  icon.svg          favicon pixel "H"
+  layout.tsx          metadata, viewport, nạp CSS + <SiteShell>
+  page.tsx            trang chủ
+  productivity/       trang /productivity
+  stuff-i-make/       trang /stuff-i-make
+  globals.css         toàn bộ design system (token, layout, component, responsive)
+  fonts.css           @font-face tự sinh, trỏ tới public/fonts
+  icon.svg            favicon pixel "H"
 components/
-  portfolio.tsx     khung trang: provider ngôn ngữ, progress bar, nút lên đầu trang
+  site-shell.tsx    provider ngôn ngữ, progress bar, nút lên đầu trang, header + footer
+  portfolio.tsx     nội dung trang chủ (ghép các section)
   lang-context.tsx  state ngôn ngữ + localStorage + ?lang=vi|en
-  header.tsx        thanh điều hướng sticky, scroll-spy, menu mobile
-  hero.tsx          banner GIF, thẻ giới thiệu, ID card pixel
+  header.tsx        nav 6 mục (4 anchor + 2 trang), scroll-spy, menu mobile
+  hero.tsx          banner GIF, thẻ giới thiệu, ID card với ảnh thật
   about.tsx         giới thiệu + thông tin nhanh + ảnh CRT
   skills.tsx        nhóm kỹ năng, thanh tiến trình pixel theo cuộn
   projects.tsx      bộ lọc dự án + dialog chi tiết (native <dialog>)
-  research.tsx      mục nghiên cứu khoa học: poster pixel (SVG) + trích dẫn BibTeX copy được
+  research.tsx      nghiên cứu quốc tế: ảnh trao giải (mở lightbox), sơ đồ, BibTeX
+  photo-viewer.tsx  thumbnail + lightbox xem ảnh full trong trang
   journey.tsx       timeline các cột mốc
   contact.tsx       email (copy được), mạng xã hội
-  footer.tsx        ticker GIF + cột liên kết
+  footer.tsx        ticker GIF + cột liên kết (đủ 8 mục)
   reveal.tsx        hiệu ứng xuất hiện khi cuộn (IntersectionObserver)
   pixel-cover.tsx   ảnh bìa dự án vẽ bằng SVG pixel
+  productivity.tsx  trang My Productivity: kệ tech + setup theo năm
+  desk-art.tsx      hình bàn làm việc pixel (SVG, tham số theo năm)
+  stuff.tsx         trang Stuff I Make: sản phẩm + nút tải 3 nền tảng
 lib/i18n.ts         TOÀN BỘ nội dung VI/EN (sửa nội dung ở đây)
 public/gifs/        9 file GIF do scripts/make_gifs.py sinh ra
 public/fonts/       woff2 tự host theo subset latin/latin-ext/vietnamese
-public/assets/      ảnh thật: avatar (DSC01358-2.jpg) + ảnh lễ trao giải (DSC02593-web.jpg)
+public/assets/      ảnh thật: avatar + ảnh trao giải (web 1100px, large 2000px)
 scripts/
   make_gifs.py      sinh lại toàn bộ GIF pixel (Pillow)
   fetch-fonts.py    tải lại font từ Google Fonts (chỉ cần khi đổi font)
 ```
 
+## Các trang
+
+| Đường dẫn | Nội dung |
+|---|---|
+| `/` | Trang chủ: hero, giới thiệu, kỹ năng, dự án, nghiên cứu, hành trình, liên hệ |
+| `/productivity` | Tech dùng hằng ngày (dạng kệ hàng: software, agent, CLI, code) + setup 2022→2026 |
+| `/stuff-i-make` | Phần mềm tự làm, nút tải Windows/macOS/Linux, danh sách đang làm |
+
+Menu header có 6 mục: 4 anchor của trang chủ (Giới thiệu, Dự án, Nghiên cứu, Liên hệ)
+và 2 trang con. Kỹ năng + Hành trình vẫn nằm trên trang chủ và trong menu footer.
+
+Ảnh lễ trao giải bấm vào sẽ mở lightbox trong trang: ảnh lớn (`DSC02593-large.jpg`,
+2000px) chỉ được tải khi mở, đóng bằng `Esc`, click nền hoặc nút X.
+
 ## Sửa nội dung
 
 Mọi câu chữ nằm trong `lib/i18n.ts`, gồm hai object `vi` và `en` có cùng cấu trúc:
-tiêu đề, giới thiệu, thông tin nhanh, kỹ năng, 5 dự án, công bố khoa học, hành trình,
-liên hệ, footer. Sửa một bên thì TypeScript sẽ báo nếu bên còn lại thiếu khoá tương ứng.
+trang chủ (giới thiệu, kỹ năng, dự án, công bố khoa học, hành trình, liên hệ),
+`productivity` (21 công cụ + 5 setup) và `stuff` (sản phẩm + đang làm).
+Sửa một bên thì TypeScript sẽ báo nếu bên còn lại thiếu khoá tương ứng.
+
+Thêm một công cụ vào kệ: thêm object vào `productivity.tools.items` (name, cat, letter,
+color, price, since, desc, href). Thêm sản phẩm: thêm vào `stuff.items` với `downloads`
+cho từng nền tảng — nút tải tự sinh.
 
 Bài báo hiện có: **EPU-HEKV: Hierarchical External Memory for Bounded Active Reasoning**
 (Asian Comnet 2026, Best Poster Award) — nằm trong `research.items`. Thêm bài mới bằng
 cách thêm một phần tử vào mảng đó (mỗi bài tự render thành một card).
 
 Thông tin cá nhân (tên, trường, lớp, GPA, ảnh) là thông tin thật. Phần **dự án, số liệu
-trong paper (abstract, 42% token…) và link mạng xã hội** vẫn là nội dung mẫu — nhớ thay
-bằng dữ liệu thật trong `lib/i18n.ts` trước khi deploy.
+trong paper (abstract, 42% token…), danh sách tech, sản phẩm Pixelpipe và link mạng xã hội**
+vẫn là nội dung mẫu — nhớ thay bằng dữ liệu thật trong `lib/i18n.ts` trước khi deploy.
+Link "Mua/Tải về" của kệ tech trỏ tới trang chủ thật của từng hãng; nút tải của Pixelpipe
+đang trỏ tới `github.com/server-mode/pixelpipe/releases/latest` (chưa tồn tại).
 
 ## Tạo lại ảnh GIF / font
 
