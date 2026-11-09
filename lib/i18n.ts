@@ -126,6 +126,16 @@ const vi = {
         ],
       },
     ],
+    game: {
+      title: "Làm game",
+      count: "04 ENGINE",
+      items: [
+        { name: "Godot Engine", pct: 100, accent: "green" },
+        { name: "Unreal Engine 4–5", pct: 56, accent: "blue" },
+        { name: "Blender", pct: 40, accent: "yellow" },
+        { name: "Unity", pct: 40, accent: "red" },
+      ],
+    },
     keyboardCap: "Gõ 92 từ/phút, sai 3 lần mỗi ngày.",
   },
   projects: {
@@ -407,6 +417,7 @@ const vi = {
       { k: "Setup", v: "2022 → 2026" },
       { k: "Múi giờ", v: "UTC+7" },
     ],
+    stamp: "Hồ sơ đồ nghề · bản 2026",
     tools: {
       label: "Kệ đồ nghề",
       title: "Tech mình dùng hằng ngày",
@@ -682,6 +693,76 @@ const vi = {
         },
       ],
     },
+    channels: {
+      label: "Danh mục xem",
+      title: "Kênh mình xem mỗi tối",
+      lede: "Không phải khoá học, chỉ là mấy kênh mình bật lên lúc ăn cơm hoặc trước khi đi ngủ. Gom lại theo ba thứ mình đang mò.",
+      note: "Danh sách tự chọn, không có link giới thiệu.",
+      countLabel: (n: number) => `${n} kênh`,
+      groups: [
+        {
+          title: "AI local & tech",
+          note: "Chạy model ở nhà, phần cứng và mấy buổi thử nghiệm",
+          items: [
+            {
+              name: "Digital Spaceport",
+              handle: "@DigitalSpaceport",
+              href: "https://www.youtube.com/@DigitalSpaceport",
+            },
+            {
+              name: "Duy Luân Dễ Thương",
+              handle: "@duyluandethuong",
+              href: "https://www.youtube.com/@duyluandethuong",
+            },
+            {
+              name: "Jeff Geerling",
+              handle: "@JeffGeerling",
+              href: "https://www.youtube.com/@JeffGeerling",
+            },
+            { name: "AZisk", handle: "@AZisk", href: "https://www.youtube.com/@AZisk" },
+            { name: "Lecctron", handle: "@lecctron", href: "https://www.youtube.com/@lecctron" },
+            {
+              name: "Tiến Sư Thầy",
+              handle: "@tiensuthay1303",
+              href: "https://www.youtube.com/@tiensuthay1303",
+            },
+          ],
+        },
+        {
+          title: "Mạng · homelab · CCNA",
+          note: "Router, switch và gắn lại wifi cho cả nhà",
+          items: [
+            {
+              name: "Hardware Haven",
+              handle: "@HardwareHaven",
+              href: "https://www.youtube.com/@HardwareHaven",
+            },
+            {
+              name: "David Bombal",
+              handle: "@davidbombal",
+              href: "https://www.youtube.com/@davidbombal",
+            },
+            {
+              name: "Red Stapler",
+              handle: "@RedStapler_channel",
+              href: "https://www.youtube.com/@RedStapler_channel",
+            },
+          ],
+        },
+        {
+          title: "Lập trình chuyên sâu · 3D",
+          note: "C++ sâu, shader và mấy buổi dựng hình",
+          items: [
+            {
+              name: "The Cherno",
+              handle: "@TheCherno",
+              href: "https://www.youtube.com/@TheCherno",
+            },
+            { name: "Le_x_Lu", handle: "@Le_x_Lu", href: "https://www.youtube.com/@Le_x_Lu" },
+          ],
+        },
+      ],
+    },
     cta: {
       title: "Phần mềm tự viết thì để bên kia",
       text: "Một CLI về dữ liệu, kèm nút tải cho Windows, macOS và Linux.",
@@ -905,6 +986,16 @@ const en: Copy = {
         ],
       },
     ],
+    game: {
+      title: "Game dev",
+      count: "04 ENGINE",
+      items: [
+        { name: "Godot Engine", pct: 100, accent: "green" },
+        { name: "Unreal Engine 4–5", pct: 56, accent: "blue" },
+        { name: "Blender", pct: 40, accent: "yellow" },
+        { name: "Unity", pct: 40, accent: "red" },
+      ],
+    },
     keyboardCap: "92 WPM, three typos a day.",
   },
   projects: {
@@ -1186,6 +1277,7 @@ const en: Copy = {
       { k: "Setup", v: "2022 → 2026" },
       { k: "Timezone", v: "UTC+7" },
     ],
+    stamp: "Toolkit dossier · 2026 edition",
     tools: {
       label: "The shelf",
       title: "Tech I use daily",
@@ -1458,6 +1550,76 @@ const en: Copy = {
           gear: ["2 × 27-inch 4K", "Custom 65% keyboard", "2.0 speakers", "A pothos plant"],
           monitors: 2,
           extras: ["plant", "speaker"],
+        },
+      ],
+    },
+    channels: {
+      label: "Watchlist",
+      title: "Channels I watch most evenings",
+      lede: "Not a course list — just the channels I put on while eating dinner or before bed, sorted by the three things I am currently poking at.",
+      note: "Hand-picked, no affiliate links.",
+      countLabel: (n: number) => `${n} channel${n === 1 ? "" : "s"}`,
+      groups: [
+        {
+          title: "Local AI & tech",
+          note: "Running models at home, hardware and experiments",
+          items: [
+            {
+              name: "Digital Spaceport",
+              handle: "@DigitalSpaceport",
+              href: "https://www.youtube.com/@DigitalSpaceport",
+            },
+            {
+              name: "Duy Luân Dễ Thương",
+              handle: "@duyluandethuong",
+              href: "https://www.youtube.com/@duyluandethuong",
+            },
+            {
+              name: "Jeff Geerling",
+              handle: "@JeffGeerling",
+              href: "https://www.youtube.com/@JeffGeerling",
+            },
+            { name: "AZisk", handle: "@AZisk", href: "https://www.youtube.com/@AZisk" },
+            { name: "Lecctron", handle: "@lecctron", href: "https://www.youtube.com/@lecctron" },
+            {
+              name: "Tiến Sư Thầy",
+              handle: "@tiensuthay1303",
+              href: "https://www.youtube.com/@tiensuthay1303",
+            },
+          ],
+        },
+        {
+          title: "Networking · homelab · CCNA",
+          note: "Routers, switches and re-cabling the whole flat",
+          items: [
+            {
+              name: "Hardware Haven",
+              handle: "@HardwareHaven",
+              href: "https://www.youtube.com/@HardwareHaven",
+            },
+            {
+              name: "David Bombal",
+              handle: "@davidbombal",
+              href: "https://www.youtube.com/@davidbombal",
+            },
+            {
+              name: "Red Stapler",
+              handle: "@RedStapler_channel",
+              href: "https://www.youtube.com/@RedStapler_channel",
+            },
+          ],
+        },
+        {
+          title: "Deep programming · 3D",
+          note: "C++ internals, shaders and modelling sessions",
+          items: [
+            {
+              name: "The Cherno",
+              handle: "@TheCherno",
+              href: "https://www.youtube.com/@TheCherno",
+            },
+            { name: "Le_x_Lu", handle: "@Le_x_Lu", href: "https://www.youtube.com/@Le_x_Lu" },
+          ],
         },
       ],
     },

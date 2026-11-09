@@ -65,7 +65,7 @@ scripts/
 | Đường dẫn | Nội dung |
 |---|---|
 | `/` | Trang chủ: hero, giới thiệu, kỹ năng, dự án, nghiên cứu, hành trình, liên hệ |
-| `/productivity` | Tech dùng hằng ngày (dạng kệ hàng: software, agent, CLI, code) + setup 2022→2026 |
+| `/productivity` | Tech dùng hằng ngày (kệ hàng: software, agent, CLI, code), setup 2022→2026, kênh YouTube nên xem — tông giấy vintage |
 | `/stuff-i-make` | Phần mềm tự làm, nút tải Windows/macOS/Linux, danh sách đang làm |
 
 Menu header có 6 mục: 4 anchor của trang chủ (Giới thiệu, Dự án, Nghiên cứu, Liên hệ)
@@ -82,8 +82,14 @@ trang chủ (giới thiệu, kỹ năng, dự án, công bố khoa học, hành 
 Sửa một bên thì TypeScript sẽ báo nếu bên còn lại thiếu khoá tương ứng.
 
 Thêm một công cụ vào kệ: thêm object vào `productivity.tools.items` (name, cat, letter,
-color, price, since, desc, href). Thêm sản phẩm: thêm vào `stuff.items` với `downloads`
+color, price, since, desc, href). Thêm kênh YouTube: thêm vào `productivity.channels.groups`
+(mỗi kênh cần name, handle, href). Thêm sản phẩm: thêm vào `stuff.items` với `downloads`
 cho từng nền tảng — nút tải tự sinh.
+
+Trang productivity dùng tông **vintage** (giấy ngà, mực nâu, dải màu ở đầu trang): toàn bộ
+màu được khai báo trong khối `.page-vintage` ở `app/globals.css`, chỉ ảnh hưởng trang đó.
+Độ thành thạo làm game (Godot, Unreal, Blender, Unity) nằm ở `skills.game` và hiện thành
+một card rộng cuối mục Kỹ năng ở trang chủ.
 
 Bài báo hiện có: **EPU-HEKV: Hierarchical External Memory for Bounded Active Reasoning**
 (Asian Comnet 2026, Best Poster Award) — nằm trong `research.items`. Thêm bài mới bằng

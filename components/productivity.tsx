@@ -27,7 +27,7 @@ export default function Productivity() {
   const categories = Object.fromEntries(tools.filters.map((f) => [f.id, f.label]));
 
   return (
-    <>
+    <div className="page-vintage">
       <header className="page-hero">
         <div className="container page-hero__inner">
           <div className="page-hero__copy">
@@ -45,6 +45,10 @@ export default function Productivity() {
                 </div>
               ))}
             </dl>
+            <p className="vintage-stamp">
+              <span aria-hidden="true">✷</span>
+              {t.productivity.stamp}
+            </p>
           </div>
 
           <div className="page-hero__aside">
@@ -196,7 +200,66 @@ export default function Productivity() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="channels" aria-labelledby="channels-title">
+        <div className="container">
+          <Reveal>
+            <div className="section__head">
+              <div>
+                <p className="eyebrow">
+                  <span className="eyebrow__num">03</span>
+                  {t.productivity.channels.label}
+                </p>
+                <h2 className="h2" id="channels-title">
+                  {t.productivity.channels.title}
+                </h2>
+                <p className="lede">{t.productivity.channels.lede}</p>
+              </div>
+              <div className="section__aside">
+                <p className="vintage-note">{t.productivity.channels.note}</p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal className="chans" delay={60}>
+            {t.productivity.channels.groups.map((group) => (
+              <article className="chan-group" key={group.title}>
+                <div className="chan-group__head">
+                  <h3 className="chan-group__title">{group.title}</h3>
+                  <span className="chan-group__count">
+                    {t.productivity.channels.countLabel(group.items.length)}
+                  </span>
+                </div>
+                <p className="chan-group__note">{group.note}</p>
+                <ul className="chan-list">
+                  {group.items.map((item, index) => (
+                    <li key={item.href}>
+                      <a
+                        className="chan"
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <span className="chan__num" aria-hidden="true">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="chan__body">
+                          <span className="chan__name">{item.name}</span>
+                          <span className="chan__handle">{item.handle}</span>
+                        </span>
+                        <span className="chan__arrow" aria-hidden="true">
+                          ↗
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section section--wash">
         <div className="container">
           <Reveal>
             <div className="page-cta">
@@ -218,6 +281,6 @@ export default function Productivity() {
           </Reveal>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -4,6 +4,14 @@ import type { CSSProperties } from "react";
 import Reveal from "./reveal";
 import { useLang } from "./lang-context";
 
+const ACCENTS: Record<string, string> = {
+  blue: "var(--blue)",
+  red: "var(--red)",
+  yellow: "var(--yellow)",
+  green: "var(--green)",
+  ink: "var(--ink)",
+};
+
 export default function Skills() {
   const { t } = useLang();
 
@@ -86,6 +94,38 @@ export default function Skills() {
               </ul>
             </article>
           ))}
+
+          <article className="skill-card skill-card--wide">
+            <div className="skill-card__head">
+              <h3 className="skill-card__title">{t.skills.game.title}</h3>
+              <span className="skill-card__count" aria-hidden="true">
+                {t.skills.game.count}
+              </span>
+            </div>
+
+            <ul className="gamedev">
+              {t.skills.game.items.map((item, index) => (
+                <li className="gamedev__row" key={item.name}>
+                  <span className="gamedev__name">{item.name}</span>
+                  <span className="gamedev__pct">{item.pct}%</span>
+                  <div className="skill-bar" role="img" aria-label={`${item.name} — ${item.pct}%`}>
+                    <span className="skill-bar__ticks" aria-hidden="true" />
+                    <span
+                      className="skill-bar__fill"
+                      aria-hidden="true"
+                      style={
+                        {
+                          "--p": item.pct / 100,
+                          "--accent": ACCENTS[item.accent] ?? "var(--ink)",
+                          "--delay": `${index * 70}ms`,
+                        } as CSSProperties
+                      }
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </article>
         </Reveal>
       </div>
     </section>
