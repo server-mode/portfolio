@@ -10,7 +10,7 @@ Website portfolio cá nhân phong cách **pixel art lai Google web**: nền tr�
 
 ![Giao diện trang chủ](docs/preview-hero.png)
 
-_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.png) · [Stuff I Make](docs/preview-stuff.png) · [toàn bộ trang chủ](docs/preview-full.png)._
+_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.png) · [Stuff I Make](docs/preview-stuff.png) · [card làm game](docs/preview-gamedev.png) · [toàn bộ trang chủ](docs/preview-full.png)._
 
 ## Chạy dự án
 
