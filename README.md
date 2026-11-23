@@ -95,6 +95,29 @@ người xem bấm vào ảnh thu nhỏ (click-to-load), nên trang không nặn
 Thumbnail lấy từ `i.ytimg.com`, tiêu đề lấy qua oEmbed của YouTube. Nếu chủ video tắt nhúng,
 link "YouTube ↗" dưới mỗi thẻ vẫn mở được.
 
+### Thêm/xoá video bằng mã PIN
+
+Nút **“+ Thêm video”** ở đầu mục video mở hộp thoại: nhập mã PIN 6 số → dán link YouTube →
+chọn nhóm (hoặc tạo nhóm mới) → tiêu đề để trống thì tự lấy từ YouTube. Nút **×** trên mỗi
+thẻ xoá video và cũng hỏi PIN.
+
+- Mã PIN mặc định: **592007** — chỉ lưu **hash salted SHA-256** (`PIN_SHA256` trong
+  `lib/watchlist.ts`), không lưu số thô. Khi chạy trên http LAN (không có `crypto.subtle`)
+  thì dùng hash FNV-1a dự phòng.
+- Sai 5 lần sẽ khoá 30 giây.
+- Đây là khoá tiện dụng phía client, **không phải bảo mật thật**: ai mở DevTools cũng sửa
+  được localStorage. Đừng dùng cho dữ liệu cần bảo vệ.
+- Thay PIN:
+  ```bash
+  python -c "import hashlib; print(hashlib.sha256(('hh-watchlist-v1'+'PIN_MOI').encode()).hexdigest())"
+  ```
+  rồi thay `PIN_SHA256` (và `PIN_FNV` nếu cần bản dự phòng).
+
+Danh sách thêm/xoá lưu trong **localStorage** của trình duyệt (`hh-watchlist-v1`) nên chỉ
+hiện trên máy đó. Muốn cố định, mở hộp thoại thêm video → **“Sao chép JSON”** rồi dán vào
+`productivity.videos.groups` trong `lib/i18n.ts`. Nút **“Khôi phục danh sách gốc”** xoá
+mọi thay đổi cục bộ.
+
 Độ thành thạo làm game (Godot, Unreal, Blender, Unity) nằm ở `skills.game` và hiện thành
 một card rộng cuối mục Kỹ năng ở trang chủ.
 

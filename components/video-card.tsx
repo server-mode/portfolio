@@ -8,10 +8,20 @@ type VideoCardProps = {
   author: string;
   url: string;
   playLabel: string;
+  removeLabel?: string;
+  onRemove?: () => void;
 };
 
 /** Thumbnail that swaps itself for a YouTube iframe on click. */
-export default function VideoCard({ id, title, author, url, playLabel }: VideoCardProps) {
+export default function VideoCard({
+  id,
+  title,
+  author,
+  url,
+  playLabel,
+  removeLabel,
+  onRemove,
+}: VideoCardProps) {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -50,6 +60,18 @@ export default function VideoCard({ id, title, author, url, playLabel }: VideoCa
           </button>
         )}
       </div>
+
+      {onRemove ? (
+        <button
+          type="button"
+          className="video__del"
+          onClick={onRemove}
+          aria-label={`${removeLabel ?? "Remove"}: ${title}`}
+          title={removeLabel}
+        >
+          ×
+        </button>
+      ) : null}
 
       <div className="video__body">
         <h4 className="video__title">{title}</h4>

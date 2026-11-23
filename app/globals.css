@@ -3192,6 +3192,240 @@ ol {
   font-family: var(--sans);
   font-size: 0.9rem;
 }
+/* ------------------------------------------------------- watch admin --- */
+.watch-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.wadd {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1px solid var(--n-border-strong);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--n-text);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.wadd:hover {
+  background: var(--n-surface);
+  border-color: #c9c7c1;
+}
+
+.wadd > span[aria-hidden] {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.video {
+  position: relative;
+}
+
+.video__del {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(15, 15, 15, 0.62);
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: background 0.12s ease, opacity 0.12s ease;
+}
+
+.video__del:hover,
+.video__del:focus-visible {
+  background: #d44c47;
+  opacity: 1;
+}
+
+.wdialog {
+  width: min(470px, calc(100vw - 32px));
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--n-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--n-text);
+  box-shadow: 0 18px 50px rgba(15, 15, 15, 0.22);
+}
+
+.wdialog::backdrop {
+  background: rgba(15, 15, 15, 0.42);
+  backdrop-filter: blur(2px);
+}
+
+.wdialog__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--n-border);
+}
+
+.wdialog__title {
+  font-size: 0.96rem;
+  font-weight: 600;
+}
+
+.wdialog__x {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  color: var(--n-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.wdialog__x:hover {
+  background: var(--n-surface);
+  color: var(--n-text);
+}
+
+.wdialog__body {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.wdialog__target {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--n-border);
+  border-radius: 6px;
+  background: var(--n-surface);
+  font-size: 0.82rem;
+}
+
+.wdialog__target strong {
+  font-weight: 600;
+}
+
+.wdialog__target span {
+  color: var(--n-muted);
+  font-size: 0.76rem;
+}
+
+.field {
+  display: grid;
+  gap: 5px;
+}
+
+.field > label {
+  font-size: 0.76rem;
+  color: var(--n-muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--n-border-strong);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--n-text);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+}
+
+.field input::placeholder {
+  color: #b3b1ab;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: 2px solid var(--n-blue);
+  outline-offset: 1px;
+}
+
+.field input.pin-input {
+  padding-left: 0.45em;
+  font-family: var(--mono);
+  font-size: 1.35rem;
+  letter-spacing: 0.45em;
+  text-align: center;
+}
+
+.hint {
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--n-muted);
+}
+
+.err {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #d44c47;
+}
+
+.wdialog__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--n-border);
+  border-radius: 0 0 10px 10px;
+  background: #fbfbfa;
+}
+
+.wdialog__actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.btn-n {
+  padding: 7px 12px;
+  border: 1px solid var(--n-border-strong);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--n-text);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: background 0.12s ease, opacity 0.12s ease;
+}
+
+.btn-n:hover:not(:disabled) {
+  background: var(--n-surface);
+}
+
+.btn-n:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-n--primary {
+  background: var(--n-text);
+  border-color: var(--n-text);
+  color: #fff;
+}
+
+.btn-n--primary:hover:not(:disabled) {
+  background: #1f1e1b;
+}
 /* -------------------------------------------------------- responsive --- */
 @media (max-width: 1020px) {
   .hero__inner {
@@ -3204,6 +3438,10 @@ ol {
   }
 
   .page-hero__aside {
+    justify-content: flex-start;
+  }
+
+  .watch-tools {
     justify-content: flex-start;
   }
 

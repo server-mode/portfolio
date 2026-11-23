@@ -3,7 +3,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import Reveal from "./reveal";
 import DeskArt from "./desk-art";
-import VideoCard from "./video-card";
+import Watchlist from "./watchlist";
 import { useLang } from "./lang-context";
 
 type FilterId = "all" | "software" | "agents" | "cli" | "code";
@@ -26,7 +26,6 @@ export default function Productivity() {
     [tools.items, filter],
   );
   const categories = Object.fromEntries(tools.filters.map((f) => [f.id, f.label]));
-  const videos = t.productivity.videos;
   const channels = t.productivity.channels;
 
   return (
@@ -198,51 +197,7 @@ export default function Productivity() {
         </div>
       </section>
 
-      <section className="section" id="videos" aria-labelledby="videos-title">
-        <div className="container">
-          <Reveal>
-            <div className="section__head section__head--slim">
-              <div>
-                <p className="eyebrow">
-                  <span className="eyebrow__num">03</span>
-                  {videos.label}
-                </p>
-                <h2 className="h2" id="videos-title">
-                  {videos.title}
-                </h2>
-                <p className="lede">{videos.lede}</p>
-              </div>
-            </div>
-          </Reveal>
-
-          <div className="video-groups">
-            {videos.groups.map((group, groupIndex) => (
-              <Reveal key={group.id} delay={groupIndex * 40}>
-                <div className="vgroup">
-                  <div className="vgroup__head">
-                    <h3 className="vgroup__title">{group.title}</h3>
-                    <span className="vgroup__count">{videos.countLabel(group.items.length)}</span>
-                  </div>
-                  <p className="vgroup__note">{group.note}</p>
-
-                  <div className="vgrid">
-                    {group.items.map((video) => (
-                      <VideoCard
-                        key={video.id}
-                        id={video.id}
-                        title={video.title}
-                        author={video.author}
-                        url={video.url}
-                        playLabel={videos.playLabel}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Watchlist />
 
       <section className="section section--wash" id="channels" aria-labelledby="channels-title">
         <div className="container">
