@@ -3,6 +3,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import Reveal from "./reveal";
 import DeskArt from "./desk-art";
+import VideoCard from "./video-card";
 import { useLang } from "./lang-context";
 
 type FilterId = "all" | "software" | "agents" | "cli" | "code";
@@ -25,9 +26,11 @@ export default function Productivity() {
     [tools.items, filter],
   );
   const categories = Object.fromEntries(tools.filters.map((f) => [f.id, f.label]));
+  const videos = t.productivity.videos;
+  const channels = t.productivity.channels;
 
   return (
-    <div className="page-vintage">
+    <div className="page-workspace">
       <header className="page-hero">
         <div className="container page-hero__inner">
           <div className="page-hero__copy">
@@ -35,7 +38,7 @@ export default function Productivity() {
               <span className="eyebrow__num">P1</span>
               {t.productivity.label}
             </p>
-            <h1 className="page-hero__title display">{t.productivity.title}</h1>
+            <h1 className="page-hero__title">{t.productivity.title}</h1>
             <p className="lede page-hero__lede">{t.productivity.lede}</p>
             <dl className="page-hero__chips">
               {t.productivity.chips.map((chip) => (
@@ -45,10 +48,6 @@ export default function Productivity() {
                 </div>
               ))}
             </dl>
-            <p className="vintage-stamp">
-              <span aria-hidden="true">✷</span>
-              {t.productivity.stamp}
-            </p>
           </div>
 
           <div className="page-hero__aside">
@@ -117,24 +116,23 @@ export default function Productivity() {
                   style={
                     {
                       "--accent": ACCENTS[item.color] ?? "var(--ink)",
-                      "--mono": yellow ? "var(--ink)" : "#fff",
+                      "--icon-fg": yellow ? "var(--ink)" : "#fff",
                     } as CSSProperties
                   }
                 >
-                  <div className="tool__thumb">
-                    <span className="tool__mono" aria-hidden="true">
+                  <div className="tool__head">
+                    <span className="tool__icon" aria-hidden="true">
                       {item.letter}
                     </span>
-                    <span className="tool__kind">{categories[item.cat] ?? item.cat}</span>
+                    <div>
+                      <h3 className="tool__name">{item.name}</h3>
+                      <p className="tool__kind">
+                        {categories[item.cat] ?? item.cat} · {tools.since} {item.since}
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="tool__body">
-                    <h3 className="tool__name">{item.name}</h3>
-                    <p className="tool__desc">{item.desc}</p>
-                    <p className="tool__since">
-                      {tools.since} {item.since}
-                    </p>
-                  </div>
+                  <p className="tool__desc">{item.desc}</p>
 
                   <div className="tool__foot">
                     <span className="tool__price" data-price={item.price}>
@@ -177,7 +175,7 @@ export default function Productivity() {
           <ol className="setups">
             {t.productivity.setup.items.map((item, index) => (
               <li key={item.year}>
-                <Reveal delay={index * 60}>
+                <Reveal delay={index * 50}>
                   <article className="setup">
                     <div className="setup__art">
                       <DeskArt monitors={item.monitors} extras={item.extras} />
@@ -200,45 +198,84 @@ export default function Productivity() {
         </div>
       </section>
 
-      <section className="section" id="channels" aria-labelledby="channels-title">
+      <section className="section" id="videos" aria-labelledby="videos-title">
+        <div className="container">
+          <Reveal>
+            <div className="section__head section__head--slim">
+              <div>
+                <p className="eyebrow">
+                  <span className="eyebrow__num">03</span>
+                  {videos.label}
+                </p>
+                <h2 className="h2" id="videos-title">
+                  {videos.title}
+                </h2>
+                <p className="lede">{videos.lede}</p>
+              </div>
+            </div>
+          </Reveal>
+
+          <div className="video-groups">
+            {videos.groups.map((group, groupIndex) => (
+              <Reveal key={group.id} delay={groupIndex * 40}>
+                <div className="vgroup">
+                  <div className="vgroup__head">
+                    <h3 className="vgroup__title">{group.title}</h3>
+                    <span className="vgroup__count">{videos.countLabel(group.items.length)}</span>
+                  </div>
+                  <p className="vgroup__note">{group.note}</p>
+
+                  <div className="vgrid">
+                    {group.items.map((video) => (
+                      <VideoCard
+                        key={video.id}
+                        id={video.id}
+                        title={video.title}
+                        author={video.author}
+                        url={video.url}
+                        playLabel={videos.playLabel}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--wash" id="channels" aria-labelledby="channels-title">
         <div className="container">
           <Reveal>
             <div className="section__head">
               <div>
                 <p className="eyebrow">
-                  <span className="eyebrow__num">03</span>
-                  {t.productivity.channels.label}
+                  <span className="eyebrow__num">04</span>
+                  {channels.label}
                 </p>
                 <h2 className="h2" id="channels-title">
-                  {t.productivity.channels.title}
+                  {channels.title}
                 </h2>
-                <p className="lede">{t.productivity.channels.lede}</p>
+                <p className="lede">{channels.lede}</p>
               </div>
               <div className="section__aside">
-                <p className="vintage-note">{t.productivity.channels.note}</p>
+                <p className="aside-note">{channels.note}</p>
               </div>
             </div>
           </Reveal>
 
           <Reveal className="chans" delay={60}>
-            {t.productivity.channels.groups.map((group) => (
+            {channels.groups.map((group) => (
               <article className="chan-group" key={group.title}>
                 <div className="chan-group__head">
                   <h3 className="chan-group__title">{group.title}</h3>
-                  <span className="chan-group__count">
-                    {t.productivity.channels.countLabel(group.items.length)}
-                  </span>
+                  <span className="chan-group__count">{channels.countLabel(group.items.length)}</span>
                 </div>
                 <p className="chan-group__note">{group.note}</p>
                 <ul className="chan-list">
                   {group.items.map((item, index) => (
                     <li key={item.href}>
-                      <a
-                        className="chan"
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
+                      <a className="chan" href={item.href} target="_blank" rel="noreferrer noopener">
                         <span className="chan__num" aria-hidden="true">
                           {String(index + 1).padStart(2, "0")}
                         </span>
@@ -259,7 +296,7 @@ export default function Productivity() {
         </div>
       </section>
 
-      <section className="section section--wash">
+      <section className="section">
         <div className="container">
           <Reveal>
             <div className="page-cta">

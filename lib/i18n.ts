@@ -693,8 +693,156 @@ const vi = {
         },
       ],
     },
+    videos: {
+      label: "Danh sách xem",
+      title: "Video mình thấy hữu ích",
+      lede: "Những video mình lưu lại vì xem xong thấy đáng — nhúng ngay trong trang, bấm là chạy, không cần mở tab mới.",
+      playLabel: "Phát video",
+      countLabel: (n: number) => `${n} video`,
+      groups: [
+        {
+          id: "knowledge",
+          title: "Kiến thức: AI, quantum & thiết kế chip",
+          note: "Hiểu chip từ bên trong thì mới hiểu model thật ra chạy ở đâu.",
+          items: [
+            {
+              id: "oIk3R-sMX5o",
+              title: "Chip design from the bottom up – Reiner Pope",
+              author: "Dwarkesh Patel",
+              url: "https://youtu.be/oIk3R-sMX5o",
+            },
+            {
+              id: "C4Mm2uHFOnc",
+              title: "Xây dựng Second Brain với AgenticAI + Obsidian (nguyên lý & cách làm)",
+              author: "Trần Quốc Huy — Wecommit",
+              url: "https://www.youtube.com/watch?v=C4Mm2uHFOnc",
+            },
+            {
+              id: "B8DbMJ1Zr4I",
+              title: "The Founder Using Claude to Build Real Hardware",
+              author: "The Generalist",
+              url: "https://www.youtube.com/watch?v=B8DbMJ1Zr4I",
+            },
+          ],
+        },
+        {
+          id: "productivity",
+          title: "Năng suất",
+          note: "Cách người khác dựng dashboard và sắp góc làm việc.",
+          items: [
+            {
+              id: "vT1E4cuQCHI",
+              title: "creating the ultimate productivity dashboard!",
+              author: "jvscholz",
+              url: "https://youtu.be/vT1E4cuQCHI",
+            },
+            {
+              id: "qDYNcFzYV68",
+              title: "【ルームツアー】森のなかの作業部屋。映像作家のデスク周りと仕事道具たち｜RoomTour",
+              author: "トバログ",
+              url: "https://www.youtube.com/watch?v=qDYNcFzYV68",
+            },
+          ],
+        },
+        {
+          id: "real-life",
+          title: "Chuyện đời thường",
+          note: "Mấy video chẳng liên quan gì tới code.",
+          items: [
+            {
+              id: "vmvvKPqgKDg",
+              title: "I became friends with the girl from Ministop",
+              author: "james vinh scholz",
+              url: "https://youtu.be/vmvvKPqgKDg",
+            },
+          ],
+        },
+        {
+          id: "homelab",
+          title: "Homelab · AI lab",
+          note: "Tự dựng lab ở nhà: GPU, gateway, server đồ cũ.",
+          items: [
+            {
+              id: "hcdEbk4461M",
+              title: "Mời xem “AI Lab” của mình: 1× RTX Pro 5000 72GB, 2× Pro 4500, 2× Mac Studio",
+              author: "Duy Luân Dễ Thương",
+              url: "https://youtu.be/hcdEbk4461M",
+            },
+            {
+              id: "ukv-LIOI6_E",
+              title: "I Built My Own Intelligent AI Gateway",
+              author: "Techno Tim",
+              url: "https://youtu.be/ukv-LIOI6_E",
+            },
+            {
+              id: "cQKfxcBUCtE",
+              title: "Building a home AI server from used parts",
+              author: "Ice Tea Admin",
+              url: "https://youtu.be/cQKfxcBUCtE",
+            },
+          ],
+        },
+        {
+          id: "hardware",
+          title: "Phần cứng",
+          note: "Linh kiện, GPU tự chế và mấy thứ đang đổi cách làm phần cứng.",
+          items: [
+            {
+              id: "RPceKhoH1v8",
+              title: "This Chip Will Eventually Make GPT-6.2 Free",
+              author: "Founders, Inc.",
+              url: "https://youtu.be/RPceKhoH1v8",
+            },
+            {
+              id: "QCVG8Rrms5s",
+              title: "I made a GPU in 24 Hours",
+              author: "Outer Cloud",
+              url: "https://youtu.be/QCVG8Rrms5s",
+            },
+          ],
+        },
+        {
+          id: "ai-engineering",
+          title: "AI Engineering",
+          note: "Chạy model lớn trên máy nhỏ.",
+          items: [
+            {
+              id: "WeqoL9xeYrw",
+              title: "I ran Qwen 3.8 Flash Next on 8GB card (It's Amazing!)",
+              author: "Red Stapler",
+              url: "https://youtu.be/WeqoL9xeYrw",
+            },
+            {
+              id: "_TCRH725hAM",
+              title: "I run 177B model on SSD (It's Fast!) | Qwen 3.8 Flash Next Test",
+              author: "Red Stapler",
+              url: "https://youtu.be/_TCRH725hAM",
+            },
+          ],
+        },
+        {
+          id: "ai-editing",
+          title: "Dựng video bằng AI",
+          note: "Workflow dựng phim bằng AI ngay ở nhà.",
+          items: [
+            {
+              id: "L8Oj6bO_RF4",
+              title: "Xây “Xưởng phim AI” tại nhà x2 tiết kiệm với Workflow này",
+              author: "Quạ HD",
+              url: "https://youtu.be/L8Oj6bO_RF4",
+            },
+            {
+              id: "kz99ja0Mxi4",
+              title: "Tôi Biến Mini PC + eGPU Thành “Xưởng Media AI” Có Biên Kịch, Voice, Họa Sĩ, Editor",
+              author: "Đồ Chơi Điện",
+              url: "https://youtu.be/kz99ja0Mxi4",
+            },
+          ],
+        },
+      ],
+    },
     channels: {
-      label: "Danh mục xem",
+      label: "Kênh nên xem",
       title: "Kênh mình xem mỗi tối",
       lede: "Không phải khoá học, chỉ là mấy kênh mình bật lên lúc ăn cơm hoặc trước khi đi ngủ. Gom lại theo ba thứ mình đang mò.",
       note: "Danh sách tự chọn, không có link giới thiệu.",
@@ -1553,8 +1701,156 @@ const en: Copy = {
         },
       ],
     },
-    channels: {
+    videos: {
       label: "Watchlist",
+      title: "Videos I keep coming back to",
+      lede: "Saved because they were worth the time — embedded right here, one click to play, no tab hunting.",
+      playLabel: "Play video",
+      countLabel: (n: number) => `${n} video${n === 1 ? "" : "s"}`,
+      groups: [
+        {
+          id: "knowledge",
+          title: "Knowledge: AI, quantum & chip design",
+          note: "Understand the chip and you understand where the model actually runs.",
+          items: [
+            {
+              id: "oIk3R-sMX5o",
+              title: "Chip design from the bottom up – Reiner Pope",
+              author: "Dwarkesh Patel",
+              url: "https://youtu.be/oIk3R-sMX5o",
+            },
+            {
+              id: "C4Mm2uHFOnc",
+              title: "Xây dựng Second Brain với AgenticAI + Obsidian (nguyên lý & cách làm)",
+              author: "Trần Quốc Huy — Wecommit",
+              url: "https://www.youtube.com/watch?v=C4Mm2uHFOnc",
+            },
+            {
+              id: "B8DbMJ1Zr4I",
+              title: "The Founder Using Claude to Build Real Hardware",
+              author: "The Generalist",
+              url: "https://www.youtube.com/watch?v=B8DbMJ1Zr4I",
+            },
+          ],
+        },
+        {
+          id: "productivity",
+          title: "Productivity",
+          note: "How other people build dashboards and set up their desks.",
+          items: [
+            {
+              id: "vT1E4cuQCHI",
+              title: "creating the ultimate productivity dashboard!",
+              author: "jvscholz",
+              url: "https://youtu.be/vT1E4cuQCHI",
+            },
+            {
+              id: "qDYNcFzYV68",
+              title: "【ルームツアー】森のなかの作業部屋。映像作家のデスク周りと仕事道具たち｜RoomTour",
+              author: "トバログ",
+              url: "https://www.youtube.com/watch?v=qDYNcFzYV68",
+            },
+          ],
+        },
+        {
+          id: "real-life",
+          title: "Real life feeling things",
+          note: "Nothing to do with code, on purpose.",
+          items: [
+            {
+              id: "vmvvKPqgKDg",
+              title: "I became friends with the girl from Ministop",
+              author: "james vinh scholz",
+              url: "https://youtu.be/vmvvKPqgKDg",
+            },
+          ],
+        },
+        {
+          id: "homelab",
+          title: "Homelab · AI lab",
+          note: "Building a lab at home: GPUs, gateways, used servers.",
+          items: [
+            {
+              id: "hcdEbk4461M",
+              title: "Mời xem “AI Lab” của mình: 1× RTX Pro 5000 72GB, 2× Pro 4500, 2× Mac Studio",
+              author: "Duy Luân Dễ Thương",
+              url: "https://youtu.be/hcdEbk4461M",
+            },
+            {
+              id: "ukv-LIOI6_E",
+              title: "I Built My Own Intelligent AI Gateway",
+              author: "Techno Tim",
+              url: "https://youtu.be/ukv-LIOI6_E",
+            },
+            {
+              id: "cQKfxcBUCtE",
+              title: "Building a home AI server from used parts",
+              author: "Ice Tea Admin",
+              url: "https://youtu.be/cQKfxcBUCtE",
+            },
+          ],
+        },
+        {
+          id: "hardware",
+          title: "Hardware tech",
+          note: "Parts, homemade GPUs and what is shifting in hardware.",
+          items: [
+            {
+              id: "RPceKhoH1v8",
+              title: "This Chip Will Eventually Make GPT-6.2 Free",
+              author: "Founders, Inc.",
+              url: "https://youtu.be/RPceKhoH1v8",
+            },
+            {
+              id: "QCVG8Rrms5s",
+              title: "I made a GPU in 24 Hours",
+              author: "Outer Cloud",
+              url: "https://youtu.be/QCVG8Rrms5s",
+            },
+          ],
+        },
+        {
+          id: "ai-engineering",
+          title: "AI Engineering",
+          note: "Running big models on small machines.",
+          items: [
+            {
+              id: "WeqoL9xeYrw",
+              title: "I ran Qwen 3.8 Flash Next on 8GB card (It's Amazing!)",
+              author: "Red Stapler",
+              url: "https://youtu.be/WeqoL9xeYrw",
+            },
+            {
+              id: "_TCRH725hAM",
+              title: "I run 177B model on SSD (It's Fast!) | Qwen 3.8 Flash Next Test",
+              author: "Red Stapler",
+              url: "https://youtu.be/_TCRH725hAM",
+            },
+          ],
+        },
+        {
+          id: "ai-editing",
+          title: "AI video editing",
+          note: "AI film-making workflows from a home desk.",
+          items: [
+            {
+              id: "L8Oj6bO_RF4",
+              title: "Xây “Xưởng phim AI” tại nhà x2 tiết kiệm với Workflow này",
+              author: "Quạ HD",
+              url: "https://youtu.be/L8Oj6bO_RF4",
+            },
+            {
+              id: "kz99ja0Mxi4",
+              title: "Tôi Biến Mini PC + eGPU Thành “Xưởng Media AI” Có Biên Kịch, Voice, Họa Sĩ, Editor",
+              author: "Đồ Chơi Điện",
+              url: "https://youtu.be/kz99ja0Mxi4",
+            },
+          ],
+        },
+      ],
+    },
+    channels: {
+      label: "Channels",
       title: "Channels I watch most evenings",
       lede: "Not a course list — just the channels I put on while eating dinner or before bed, sorted by the three things I am currently poking at.",
       note: "Hand-picked, no affiliate links.",

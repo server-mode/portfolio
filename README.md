@@ -10,7 +10,7 @@ Website portfolio cá nhân phong cách **pixel art lai Google web**: nền tr�
 
 ![Giao diện trang chủ](docs/preview-hero.png)
 
-_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.png) · [Stuff I Make](docs/preview-stuff.png) · [card làm game](docs/preview-gamedev.png) · [toàn bộ trang chủ](docs/preview-full.png)._
+_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.jpg) · [Stuff I Make](docs/preview-stuff.png) · [video nhúng](docs/preview-videos.jpg) · [card làm game](docs/preview-gamedev.png) · [toàn bộ trang chủ](docs/preview-full.png)._
 
 ## Chạy dự án
 
@@ -65,7 +65,7 @@ scripts/
 | Đường dẫn | Nội dung |
 |---|---|
 | `/` | Trang chủ: hero, giới thiệu, kỹ năng, dự án, nghiên cứu, hành trình, liên hệ |
-| `/productivity` | Tech dùng hằng ngày (kệ hàng: software, agent, CLI, code), setup 2022→2026, kênh YouTube nên xem — tông giấy vintage |
+| `/productivity` | Tech dùng hằng ngày, setup 2022→2026, video nhúng xem tại chỗ + kênh YouTube — giao diện kiểu Notion (nền trắng, viền 1px, bo góc) |
 | `/stuff-i-make` | Phần mềm tự làm, nút tải Windows/macOS/Linux, danh sách đang làm |
 
 Menu header có 6 mục: 4 anchor của trang chủ (Giới thiệu, Dự án, Nghiên cứu, Liên hệ)
@@ -86,8 +86,15 @@ color, price, since, desc, href). Thêm kênh YouTube: thêm vào `productivity.
 (mỗi kênh cần name, handle, href). Thêm sản phẩm: thêm vào `stuff.items` với `downloads`
 cho từng nền tảng — nút tải tự sinh.
 
-Trang productivity dùng tông **vintage** (giấy ngà, mực nâu, dải màu ở đầu trang): toàn bộ
-màu được khai báo trong khối `.page-vintage` ở `app/globals.css`, chỉ ảnh hưởng trang đó.
+Trang productivity dùng giao diện **kiểu Notion**: nền trắng, chữ Inter, viền 1px, bo góc 8px,
+không bóng cứng. Mọi override nằm trong khối `.page-workspace` ở `app/globals.css` nên các
+trang khác vẫn giữ phong cách pixel trắng–đen.
+
+Mục **video** (`productivity.videos`) chia theo nhóm; mỗi video chỉ tải iframe YouTube khi
+người xem bấm vào ảnh thu nhỏ (click-to-load), nên trang không nặng 15 iframe cùng lúc.
+Thumbnail lấy từ `i.ytimg.com`, tiêu đề lấy qua oEmbed của YouTube. Nếu chủ video tắt nhúng,
+link "YouTube ↗" dưới mỗi thẻ vẫn mở được.
+
 Độ thành thạo làm game (Godot, Unreal, Blender, Unity) nằm ở `skills.game` và hiện thành
 một card rộng cuối mục Kỹ năng ở trang chủ.
 
