@@ -3426,6 +3426,77 @@ ol {
 .btn-n--primary:hover:not(:disabled) {
   background: #1f1e1b;
 }
+/* ------------------------------------------------- drag & drop groups --- */
+.wadd--primary {
+  border-color: var(--n-text);
+  background: var(--n-text);
+  color: #fff;
+}
+
+.wadd--primary:hover {
+  background: #1f1e1b;
+  border-color: #1f1e1b;
+}
+
+.video-slot {
+  display: flex;
+  min-width: 0;
+  cursor: grab;
+}
+
+.video-slot > * {
+  width: 100%;
+}
+
+.video-slot:active {
+  cursor: grabbing;
+}
+
+.vgroup.is-drop {
+  outline: 2px dashed var(--n-blue);
+  outline-offset: 8px;
+  border-radius: 10px;
+}
+
+.vgroup__aside {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.vgroup__del {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  color: #b9b7b1;
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease;
+}
+
+.vgroup:hover .vgroup__del,
+.vgroup__del:focus-visible {
+  opacity: 1;
+}
+
+.vgroup__del:hover {
+  background: #fdecec;
+  color: #d44c47;
+}
+
+.vgroup__empty {
+  margin-top: 12px;
+  padding: 22px 16px;
+  border: 1px dashed var(--n-border-strong);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--n-muted);
+}
 /* -------------------------------------------------------- responsive --- */
 @media (max-width: 1020px) {
   .hero__inner {

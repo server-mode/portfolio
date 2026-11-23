@@ -14,26 +14,38 @@ import {
   saveWatchStore,
   verifyPin,
   type AddedVideo,
+  type WatchGroup,
   type WatchStore,
   type WatchVideo,
 } from "@/lib/watchlist";
 
-type DialogState =
-  | { kind: "closed" }
-  | { kind: "add"; step: "pin" | "form" }
-  | { kind: "delete"; video: WatchVideo };
+type GroupView = {
+  id: string;
+  title: string;
+  note: string;
+  custom: boolean;
+  items: WatchVideo[];
+};
 
-type GroupView = { id: string; title: string; note: string; items: WatchVideo[] };
+type Pending =
+  | { kind: "add-video" }
+  | { kind: "add-group" }
+  | { kind: "remove-video"; video: WatchVideo }
+  | { kind: "remove-group"; group: GroupView }
+  | { kind: "move-video"; video: WatchVideo; toGroup: GroupView };
 
 export default function Watchlist() {
   const { t } = useLang();
   const videos = t.productivity.videos;
 
   const [store, setStore] = useState<WatchStore>(EMPTY_STORE);
-  const [dialog, setDialog] = useState<DialogState>({ kind: "closed" });
+  const [pending, setPending] = useState<Pending | null>(null);
+  const [step, setStep] = useState<"pin" | "form">("pin");
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const pinRef = useRef<HTMLInputElement>(null);
   const urlRef = useRef<HTMLInputElement>(null);
+  const groupNameRef = useRef<HTMLInputElement>(null);
 
   const [pin, setPin] = useState("");
   const [pinError, setPinError] = useState("");
@@ -45,9 +57,14 @@ export default function Watchlist() {
   const [groupChoice, setGroupChoice] = useState(videos.groups[0]?.id ?? "");
   const [customGroup, setCustomGroup] = useState("");
   const [titleInput, setTitleInput] = useState("");
+  const [groupTitle, setGroupTitle] = useState("");
+  const [groupNote, setGroupNote] = useState("");
   const [formError, setFormError] = useState("");
   const [busy, setBusy] = useState(false);
   const [exported, setExported] = useState(false);
+
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState<string | null>(null);
 
   useEffect(() => {
     setStore(loadWatchStore());
@@ -61,6 +78,7 @@ export default function Watchlist() {
 
   const lockedFor = Math.max(0, Math.ceil((lockedUntil - Date.now()) / 1000));
   const locked = lockedFor > 0;
+  const dialogOpen = pending !== null;
 
   const update = useCallback((next: WatchStore) => {
     setStore(next);
@@ -68,81 +86,114 @@ export default function Watchlist() {
   }, []);
 
   const closeDialog = useCallback(() => {
-    setDialog({ kind: "closed" });
+    setPending(null);
+    setStep("pin");
     setPin("");
     setPinError("");
+    setFormError("");
   }, []);
 
-  const openDialog = useCallback((next: DialogState) => {
+  const openAction = useCallback((action: Pending) => {
     setPin("");
     setPinError("");
-    setDialog(next);
+    setFormError("");
+    setStep("pin");
+    setPending(action);
   }, []);
 
   useEffect(() => {
     const element = dialogRef.current;
     if (!element) return;
-    if (dialog.kind !== "closed" && !element.open) element.showModal();
-    if (dialog.kind === "closed" && element.open) element.close();
-  }, [dialog.kind]);
+    if (dialogOpen && !element.open) element.showModal();
+    if (!dialogOpen && element.open) element.close();
+  }, [dialogOpen]);
 
   useEffect(() => {
-    if (dialog.kind === "closed") return;
+    if (!pending) return;
     const timer = window.setTimeout(() => {
-      if (dialog.kind === "add" && dialog.step === "form") urlRef.current?.focus();
+      if (step === "form" && pending.kind === "add-video") urlRef.current?.focus();
+      else if (step === "form" && pending.kind === "add-group") groupNameRef.current?.focus();
       else pinRef.current?.focus();
     }, 60);
     return () => window.clearTimeout(timer);
-  }, [dialog]);
+  }, [pending, step]);
 
   useEffect(() => {
-    if (dialog.kind === "closed") return;
+    if (!dialogOpen) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previous;
     };
-  }, [dialog.kind]);
+  }, [dialogOpen]);
 
-  const groups = useMemo<GroupView[]>(() => {
+  const selectableGroups = useMemo(
+    () => [
+      ...videos.groups.map((group) => ({ id: group.id, title: group.title })),
+      ...store.groups
+        .filter((group) => !store.removedGroups.includes(group.id))
+        .map((group) => ({ id: group.id, title: group.title })),
+    ],
+    [videos.groups, store.groups, store.removedGroups],
+  );
+
+  const { groups, placement, index } = useMemo(() => {
     const removed = new Set(store.removed);
-    const base: GroupView[] = videos.groups.map((group) => ({
-      id: group.id,
-      title: group.title,
-      note: group.note,
-      items: group.items
-        .filter((item) => !removed.has(item.id))
-        .map((item) => ({ id: item.id, title: item.title, author: item.author, url: item.url })),
-    }));
+    const hidden = new Set(store.removedGroups);
 
-    const extra: GroupView[] = [];
+    const views: GroupView[] = [
+      ...videos.groups
+        .filter((group) => !hidden.has(group.id))
+        .map((group) => ({
+          id: group.id,
+          title: group.title,
+          note: group.note,
+          custom: false,
+          items: [] as WatchVideo[],
+        })),
+      ...store.groups
+        .filter((group) => !hidden.has(group.id))
+        .map((group) => ({
+          id: group.id,
+          title: group.title,
+          note: group.note,
+          custom: true,
+          items: [] as WatchVideo[],
+        })),
+    ];
+
+    const byId = new Map(views.map((view) => [view.id, view]));
+    const placement: Record<string, string> = {};
+    const index: Record<string, WatchVideo> = {};
+
+    for (const group of videos.groups) {
+      for (const item of group.items) {
+        if (removed.has(item.id)) continue;
+        index[item.id] = { id: item.id, title: item.title, author: item.author, url: item.url };
+        const target = byId.get(store.moved[item.id] ?? group.id);
+        if (!target) continue;
+        target.items.push(index[item.id]);
+        placement[item.id] = target.id;
+      }
+    }
+
     for (const added of store.added) {
       if (removed.has(added.id)) continue;
-      const found =
-        base.find((group) => group.id === added.groupId) ??
-        extra.find((group) => group.id === added.groupId);
-      const target =
-        found ??
-        (() => {
-          const created: GroupView = {
-            id: added.groupId,
-            title: added.groupTitle || videos.customGroup,
-            note: "",
-            items: [],
-          };
-          extra.push(created);
-          return created;
-        })();
-      target.items.push({
+      const video: WatchVideo = {
         id: added.id,
         title: added.title,
         author: added.author,
         url: added.url,
-      });
+      };
+      index[added.id] = video;
+      const target = byId.get(store.moved[added.id] ?? added.groupId);
+      if (!target) continue;
+      target.items.push(video);
+      placement[added.id] = target.id;
     }
 
-    return [...base, ...extra].filter((group) => group.items.length > 0);
-  }, [videos.groups, videos.customGroup, store]);
+    return { groups: views, placement, index };
+  }, [videos.groups, store]);
 
   const removeVideo = useCallback(
     (video: WatchVideo) => {
@@ -156,9 +207,26 @@ export default function Watchlist() {
     [store, update],
   );
 
+  const hideGroup = useCallback(
+    (groupId: string) => {
+      update({
+        ...store,
+        removedGroups: Array.from(new Set([...store.removedGroups, groupId])),
+      });
+    },
+    [store, update],
+  );
+
+  const moveVideo = useCallback(
+    (videoId: string, groupId: string) => {
+      update({ ...store, moved: { ...store.moved, [videoId]: groupId } });
+    },
+    [store, update],
+  );
+
   async function submitPin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (locked) return;
+    if (!pending || locked) return;
     if (!/^\d{6}$/.test(pin)) {
       setPinError(videos.pinWrong.replace("{n}", String(MAX_ATTEMPTS - attempts)));
       return;
@@ -180,21 +248,28 @@ export default function Watchlist() {
     setPin("");
     setPinError("");
     setAttempts(0);
-    if (dialog.kind === "add") setDialog({ kind: "add", step: "form" });
-    else if (dialog.kind === "delete") {
-      removeVideo(dialog.video);
-      closeDialog();
+
+    if (pending.kind === "add-video" || pending.kind === "add-group") {
+      setStep("form");
+      return;
     }
+
+    if (pending.kind === "remove-video") removeVideo(pending.video);
+    if (pending.kind === "remove-group") hideGroup(pending.group.id);
+    if (pending.kind === "move-video") moveVideo(pending.video.id, pending.toGroup.id);
+    closeDialog();
   }
 
-  function resetForm() {
+  function resetForms() {
     setUrl("");
     setTitleInput("");
     setCustomGroup("");
+    setGroupTitle("");
+    setGroupNote("");
     setFormError("");
   }
 
-  async function submitAdd(event: FormEvent<HTMLFormElement>) {
+  async function submitAddVideo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
 
@@ -204,11 +279,12 @@ export default function Watchlist() {
       return;
     }
 
-    const allIds = new Set([
-      ...videos.groups.flatMap((group) => group.items.map((item) => item.id)),
+    const existing = new Set([
+      ...groups.flatMap((group) => group.items.map((item) => item.id)),
       ...store.added.map((item) => item.id),
+      ...store.removed,
     ]);
-    if (allIds.has(id)) {
+    if (existing.has(id)) {
       setFormError(videos.duplicate);
       return;
     }
@@ -224,27 +300,44 @@ export default function Watchlist() {
       author = meta?.author?.trim() || "";
     }
 
-    const isCustom = groupChoice === "__custom";
+    const chosen = selectableGroups.some((group) => group.id === groupChoice)
+      ? groupChoice
+      : selectableGroups[0]?.id ?? "__custom";
+    const isCustom = chosen === "__custom";
     const customName = customGroup.trim();
     const added: AddedVideo = {
       id,
       title,
       author,
       url: `https://youtu.be/${id}`,
-      groupId: isCustom ? `custom:${customName || videos.customGroup}` : groupChoice,
+      groupId: isCustom ? `custom:${customName || videos.customGroup}` : chosen,
       groupTitle: isCustom ? customName || videos.customGroup : "",
       addedAt: Date.now(),
     };
 
     update({ ...store, added: [...store.added, added] });
     setBusy(false);
-    resetForm();
+    resetForms();
+    closeDialog();
+  }
+
+  function submitAddGroup(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const title = groupTitle.trim();
+    if (!title) return;
+    const group: WatchGroup = {
+      id: `g${Date.now().toString(36)}`,
+      title,
+      note: groupNote.trim(),
+    };
+    update({ ...store, groups: [...store.groups, group] });
+    resetForms();
     closeDialog();
   }
 
   async function copyJson() {
     try {
-      await navigator.clipboard.writeText(JSON.stringify(store.added, null, 2));
+      await navigator.clipboard.writeText(JSON.stringify(store, null, 2));
       setExported(true);
       window.setTimeout(() => setExported(false), 1800);
     } catch {
@@ -252,13 +345,46 @@ export default function Watchlist() {
     }
   }
 
-  const isPinStep = dialog.kind === "delete" || (dialog.kind === "add" && dialog.step === "pin");
-  const dialogTitle =
-    dialog.kind === "delete"
-      ? videos.deleteTitle
-      : dialog.kind === "add" && dialog.step === "form"
-        ? videos.addTitle
-        : videos.pinTitle;
+  const isPinStep = !pending || step === "pin";
+
+  const dialogTitle = (() => {
+    if (!pending) return "";
+    if (step === "pin") return videos.pinTitle;
+    if (pending.kind === "add-group") return videos.addGroupTitle;
+    return videos.addTitle;
+  })();
+
+  function pinContext() {
+    if (!pending) return null;
+    if (pending.kind === "remove-video") {
+      return (
+        <p className="wdialog__target">
+          <strong>{pending.video.title}</strong>
+          <span>{videos.removeHint}</span>
+        </p>
+      );
+    }
+    if (pending.kind === "remove-group") {
+      return (
+        <p className="wdialog__target">
+          <strong>{pending.group.title}</strong>
+          <span>{videos.removeGroupHint}</span>
+        </p>
+      );
+    }
+    if (pending.kind === "move-video") {
+      return (
+        <p className="wdialog__target">
+          <strong>
+            {videos.moveHint
+              .replace("{video}", pending.video.title)
+              .replace("{group}", pending.toGroup.title)}
+          </strong>
+        </p>
+      );
+    }
+    return null;
+  }
 
   return (
     <section className="section" id="videos" aria-labelledby="videos-title">
@@ -279,7 +405,15 @@ export default function Watchlist() {
               <button
                 type="button"
                 className="wadd"
-                onClick={() => openDialog({ kind: "add", step: "pin" })}
+                onClick={() => openAction({ kind: "add-group" })}
+              >
+                <span aria-hidden="true">+</span>
+                {videos.addGroup}
+              </button>
+              <button
+                type="button"
+                className="wadd wadd--primary"
+                onClick={() => openAction({ kind: "add-video" })}
               >
                 <span aria-hidden="true">+</span>
                 {videos.add}
@@ -289,29 +423,81 @@ export default function Watchlist() {
         </Reveal>
 
         <div className="video-groups">
-          {groups.map((group, index) => (
-            <Reveal key={group.id} delay={index * 40}>
-              <div className="vgroup">
+          {groups.map((group, groupIndex) => (
+            <Reveal key={group.id} delay={groupIndex * 40}>
+              <div
+                className={`vgroup${dragOver === group.id ? " is-drop" : ""}`}
+                onDragOver={(event) => {
+                  if (!dragId) return;
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = "move";
+                  if (dragOver !== group.id) setDragOver(group.id);
+                }}
+                onDragLeave={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    setDragOver((current) => (current === group.id ? null : current));
+                  }
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  setDragOver(null);
+                  const id = event.dataTransfer.getData("text/plain") || dragId;
+                  setDragId(null);
+                  if (!id) return;
+                  const video = index[id];
+                  if (!video || placement[id] === group.id) return;
+                  openAction({ kind: "move-video", video, toGroup: group });
+                }}
+              >
                 <div className="vgroup__head">
                   <h3 className="vgroup__title">{group.title}</h3>
-                  <span className="vgroup__count">{videos.countLabel(group.items.length)}</span>
+                  <div className="vgroup__aside">
+                    <span className="vgroup__count">{videos.countLabel(group.items.length)}</span>
+                    <button
+                      type="button"
+                      className="vgroup__del"
+                      onClick={() => openAction({ kind: "remove-group", group })}
+                      aria-label={`${videos.removeGroup}: ${group.title}`}
+                      title={videos.removeGroup}
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
                 {group.note ? <p className="vgroup__note">{group.note}</p> : null}
 
-                <div className="vgrid">
-                  {group.items.map((video) => (
-                    <VideoCard
-                      key={video.id}
-                      id={video.id}
-                      title={video.title}
-                      author={video.author}
-                      url={video.url}
-                      playLabel={videos.playLabel}
-                      removeLabel={videos.remove}
-                      onRemove={() => openDialog({ kind: "delete", video })}
-                    />
-                  ))}
-                </div>
+                {group.items.length === 0 ? (
+                  <p className="vgroup__empty">{videos.dropHint}</p>
+                ) : (
+                  <div className="vgrid">
+                    {group.items.map((video) => (
+                      <div
+                        className="video-slot"
+                        key={video.id}
+                        draggable
+                        onDragStart={(event) => {
+                          setDragId(video.id);
+                          event.dataTransfer.effectAllowed = "move";
+                          event.dataTransfer.setData("text/plain", video.id);
+                        }}
+                        onDragEnd={() => {
+                          setDragId(null);
+                          setDragOver(null);
+                        }}
+                      >
+                        <VideoCard
+                          id={video.id}
+                          title={video.title}
+                          author={video.author}
+                          url={video.url}
+                          playLabel={videos.playLabel}
+                          removeLabel={videos.remove}
+                          onRemove={() => openAction({ kind: "remove-video", video })}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </Reveal>
           ))}
@@ -327,7 +513,7 @@ export default function Watchlist() {
           if (event.target === dialogRef.current) closeDialog();
         }}
       >
-        {dialog.kind !== "closed" ? (
+        {pending ? (
           <>
             <div className="wdialog__head">
               <h3 className="wdialog__title">{dialogTitle}</h3>
@@ -345,12 +531,7 @@ export default function Watchlist() {
               <form onSubmit={submitPin}>
                 <div className="wdialog__body">
                   <p className="hint">{videos.pinHint}</p>
-                  {dialog.kind === "delete" ? (
-                    <p className="wdialog__target">
-                      <strong>{dialog.video.title}</strong>
-                      <span>{videos.removeHint}</span>
-                    </p>
-                  ) : null}
+                  {pinContext()}
 
                   <div className="field">
                     <label htmlFor="watch-pin">{videos.pinLabel}</label>
@@ -374,7 +555,9 @@ export default function Watchlist() {
                       {pinError}
                     </p>
                   ) : null}
-                  {locked ? <p className="hint">{videos.pinLocked.replace("{s}", String(lockedFor))}</p> : null}
+                  {locked ? (
+                    <p className="hint">{videos.pinLocked.replace("{s}", String(lockedFor))}</p>
+                  ) : null}
                 </div>
 
                 <div className="wdialog__foot">
@@ -390,8 +573,8 @@ export default function Watchlist() {
                   </button>
                 </div>
               </form>
-            ) : (
-              <form onSubmit={submitAdd}>
+            ) : pending.kind === "add-video" ? (
+              <form onSubmit={submitAddVideo}>
                 <div className="wdialog__body">
                   <div className="field">
                     <label htmlFor="watch-url">{videos.urlLabel}</label>
@@ -413,7 +596,7 @@ export default function Watchlist() {
                       value={groupChoice}
                       onChange={(event) => setGroupChoice(event.target.value)}
                     >
-                      {videos.groups.map((group) => (
+                      {selectableGroups.map((group) => (
                         <option key={group.id} value={group.id}>
                           {group.title}
                         </option>
@@ -471,6 +654,52 @@ export default function Watchlist() {
                     </button>
                     <button type="submit" className="btn-n btn-n--primary" disabled={busy}>
                       {busy ? videos.fetching : videos.submit}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <form onSubmit={submitAddGroup}>
+                <div className="wdialog__body">
+                  <div className="field">
+                    <label htmlFor="watch-new-group">{videos.groupNameLabel}</label>
+                    <input
+                      id="watch-new-group"
+                      ref={groupNameRef}
+                      value={groupTitle}
+                      onChange={(event) => setGroupTitle(event.target.value)}
+                      placeholder={videos.customGroup}
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label htmlFor="watch-new-note">{videos.groupNoteLabel}</label>
+                    <input
+                      id="watch-new-note"
+                      value={groupNote}
+                      onChange={(event) => setGroupNote(event.target.value)}
+                      placeholder={videos.groupNotePlaceholder}
+                    />
+                  </div>
+
+                  {formError ? (
+                    <p className="err" role="alert">
+                      {formError}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="wdialog__foot">
+                  <div className="wdialog__actions">
+                    <button type="button" className="btn-n" onClick={closeDialog}>
+                      {videos.cancel}
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn-n btn-n--primary"
+                      disabled={!groupTitle.trim()}
+                    >
+                      {videos.submitGroup}
                     </button>
                   </div>
                 </div>

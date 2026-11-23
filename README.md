@@ -95,11 +95,20 @@ người xem bấm vào ảnh thu nhỏ (click-to-load), nên trang không nặn
 Thumbnail lấy từ `i.ytimg.com`, tiêu đề lấy qua oEmbed của YouTube. Nếu chủ video tắt nhúng,
 link "YouTube ↗" dưới mỗi thẻ vẫn mở được.
 
-### Thêm/xoá video bằng mã PIN
+### Thêm/xoá video, thêm/xoá nhóm, kéo-thả — đều qua mã PIN
 
-Nút **“+ Thêm video”** ở đầu mục video mở hộp thoại: nhập mã PIN 6 số → dán link YouTube →
-chọn nhóm (hoặc tạo nhóm mới) → tiêu đề để trống thì tự lấy từ YouTube. Nút **×** trên mỗi
-thẻ xoá video và cũng hỏi PIN.
+Ba nút quản trị ở đầu mục video:
+
+- **“+ Thêm video”**: nhập PIN → dán link YouTube → chọn nhóm → tiêu đề để trống thì tự
+  lấy từ YouTube (oEmbed).
+- **“+ Thêm nhóm”**: nhập PIN → đặt tên + mô tả ngắn → nhóm trống xuất hiện ở cuối kèm ô
+  “Kéo video vào đây”.
+- **“×” trên thẻ video** hoặc **“×” cạnh tên nhóm**: nhập PIN rồi mới xoá. Xoá nhóm chỉ
+  *ẩn* nhóm và video bên trong, không xoá khỏi dữ liệu.
+
+**Kéo-thả**: kéo một thẻ video sang nhóm khác sẽ hiện hộp thoại PIN kèm câu “Chuyển «video»
+sang nhóm «nhóm»”; nhập đúng PIN mới đổi chỗ. Kéo-thả dùng HTML5 drag & drop nên chạy trên
+chuột/máy tính; trên điện thoại thì vẫn thêm/xoá được nhưng chưa kéo được.
 
 - Mã PIN mặc định: **592007** — chỉ lưu **hash salted SHA-256** (`PIN_SHA256` trong
   `lib/watchlist.ts`), không lưu số thô. Khi chạy trên http LAN (không có `crypto.subtle`)
@@ -116,7 +125,7 @@ thẻ xoá video và cũng hỏi PIN.
 Danh sách thêm/xoá lưu trong **localStorage** của trình duyệt (`hh-watchlist-v1`) nên chỉ
 hiện trên máy đó. Muốn cố định, mở hộp thoại thêm video → **“Sao chép JSON”** rồi dán vào
 `productivity.videos.groups` trong `lib/i18n.ts`. Nút **“Khôi phục danh sách gốc”** xoá
-mọi thay đổi cục bộ.
+mọi thay đổi cục bộ (kể cả nhóm tự tạo và các lần kéo-thả).
 
 Độ thành thạo làm game (Godot, Unreal, Blender, Unity) nằm ở `skills.game` và hiện thành
 một card rộng cuối mục Kỹ năng ở trang chủ.

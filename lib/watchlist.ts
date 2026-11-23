@@ -6,9 +6,23 @@ export type AddedVideo = WatchVideo & {
   addedAt: number;
 };
 
-export type WatchStore = { added: AddedVideo[]; removed: string[] };
+export type WatchGroup = { id: string; title: string; note: string };
 
-export const EMPTY_STORE: WatchStore = { added: [], removed: [] };
+export type WatchStore = {
+  added: AddedVideo[];
+  removed: string[];
+  groups: WatchGroup[];
+  removedGroups: string[];
+  moved: Record<string, string>;
+};
+
+export const EMPTY_STORE: WatchStore = {
+  added: [],
+  removed: [],
+  groups: [],
+  removedGroups: [],
+  moved: {},
+};
 
 const STORE_KEY = "hh-watchlist-v1";
 const PIN_SALT = "hh-watchlist-v1";
@@ -96,11 +110,34 @@ export function loadWatchStore(): WatchStore {
     const raw = window.localStorage.getItem(STORE_KEY);
     if (!raw) return EMPTY_STORE;
     const parsed = JSON.parse(raw) as Partial<WatchStore>;
+
+    const moved: Record<string, string> = {};
+    if (parsed.moved && typeof parsed.moved === "object") {
+      for (const [key, value] of Object.entries(parsed.moved)) {
+        if (typeof value === "string") moved[key] = value;
+      }
+    }
+
     return {
-      added: Array.isArray(parsed.added) ? parsed.added.filter((v) => v && v.id) : [],
+      added: Array.isArray(parsed.added)
+        ? parsed.added.filter((video) => video && video.id)
+        : [],
       removed: Array.isArray(parsed.removed)
         ? parsed.removed.filter((id): id is string => typeof id === "string")
         : [],
+      groups: Array.isArray(parsed.groups)
+        ? parsed.groups
+            .filter((group) => group && group.id)
+            .map((group) => ({
+              id: String(group.id),
+              title: String(group.title ?? ""),
+              note: String(group.note ?? ""),
+            }))
+        : [],
+      removedGroups: Array.isArray(parsed.removedGroups)
+        ? parsed.removedGroups.filter((id): id is string => typeof id === "string")
+        : [],
+      moved,
     };
   } catch {
     return EMPTY_STORE;

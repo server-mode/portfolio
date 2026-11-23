@@ -727,6 +727,19 @@ const vi = {
       localNote:
         "Danh sách lưu trong trình duyệt này. Muốn cố định cho mọi người, chép JSON rồi thêm vào lib/i18n.ts.",
       customGroup: "Tự thêm",
+      addGroup: "Thêm nhóm",
+      addGroupTitle: "Tạo nhóm mới",
+      groupNoteLabel: "Mô tả ngắn (không bắt buộc)",
+      groupNotePlaceholder: "Ví dụ: video về mạng máy tính",
+      submitGroup: "Tạo nhóm",
+      removeGroup: "Xoá nhóm",
+      removeGroupTitle: "Xoá nhóm",
+      removeGroupHint:
+        "Nhóm và các video bên trong sẽ bị ẩn. Có thể lấy lại bằng “Khôi phục danh sách gốc”.",
+      moveTitle: "Chuyển video",
+      moveHint: "Chuyển “{video}” sang nhóm “{group}”.",
+      dropHint: "Kéo video vào đây",
+      emptyGroup: "Chưa có video",
       countLabel: (n: number) => `${n} video`,
       groups: [
         {
@@ -1764,6 +1777,19 @@ const en: Copy = {
       localNote:
         "This list is stored in this browser. To make it permanent, copy the JSON and paste it into lib/i18n.ts.",
       customGroup: "Custom",
+      addGroup: "Add group",
+      addGroupTitle: "Create a group",
+      groupNoteLabel: "Short note (optional)",
+      groupNotePlaceholder: "e.g. networking videos",
+      submitGroup: "Create group",
+      removeGroup: "Delete group",
+      removeGroupTitle: "Delete group",
+      removeGroupHint:
+        "The group and its videos will be hidden. Bring them back with “Restore the original list”.",
+      moveTitle: "Move video",
+      moveHint: "Move “{video}” to “{group}”.",
+      dropHint: "Drop a video here",
+      emptyGroup: "No videos yet",
       countLabel: (n: number) => `${n} video${n === 1 ? "" : "s"}`,
       groups: [
         {
