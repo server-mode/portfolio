@@ -10,7 +10,7 @@ Website portfolio cá nhân phong cách **pixel art lai Google web**: nền tr�
 
 ![Giao diện trang chủ](docs/preview-hero.png)
 
-_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.jpg) · [Stuff I Make](docs/preview-stuff.png) · [video nhúng](docs/preview-videos.jpg) · [thêm/xoá bằng PIN](docs/preview-watchlist.png) · [card làm game](docs/preview-gamedev.png) · [toàn bộ trang chủ](docs/preview-full.png)._
+_Xem thêm: [nghiên cứu khoa học](docs/preview-research.png) · [My Productivity](docs/preview-productivity.jpg) · [Stuff I Make](docs/preview-stuff.png) · [đồ nghề agentic](docs/preview-resources.jpg) · [video nhúng](docs/preview-videos.jpg) · [thêm/xoá bằng PIN](docs/preview-watchlist.png) · [card làm game](docs/preview-gamedev.png) · [toàn bộ trang chủ](docs/preview-full.png)._
 
 ## Chạy dự án
 
@@ -49,9 +49,15 @@ components/
   reveal.tsx        hiệu ứng xuất hiện khi cuộn (IntersectionObserver)
   pixel-cover.tsx   ảnh bìa dự án vẽ bằng SVG pixel
   productivity.tsx  trang My Productivity: kệ tech + setup theo năm
+  resources.tsx     mục Agentic: skill / MCP / repo / dataset (thẻ + thêm-xoá bằng PIN)
+  watchlist.tsx     mục video: nhóm, nhúng YouTube, thêm-xoá-kéo thả (PIN)
+  video-card.tsx    thumbnail YouTube đổi thành iframe khi bấm
   desk-art.tsx      hình bàn làm việc pixel (SVG, tham số theo năm)
   stuff.tsx         trang Stuff I Make: sản phẩm + nút tải 3 nền tảng
 lib/i18n.ts         TOÀN BỘ nội dung VI/EN (sửa nội dung ở đây)
+lib/pin.ts          kiểm tra mã PIN (hash salted SHA-256 + fallback FNV-1a)
+lib/watchlist.ts    kiểu dữ liệu + localStorage danh sách video
+lib/resources.ts    kiểu dữ liệu + localStorage danh sách tài nguyên
 public/gifs/        9 file GIF do scripts/make_gifs.py sinh ra
 public/fonts/       woff2 tự host theo subset latin/latin-ext/vietnamese
 public/assets/      ảnh thật: avatar + ảnh trao giải (web 1100px, large 2000px)
@@ -65,7 +71,7 @@ scripts/
 | Đường dẫn | Nội dung |
 |---|---|
 | `/` | Trang chủ: hero, giới thiệu, kỹ năng, dự án, nghiên cứu, hành trình, liên hệ |
-| `/productivity` | Tech dùng hằng ngày, setup 2022→2026, video nhúng xem tại chỗ + kênh YouTube — giao diện kiểu Notion (nền trắng, viền 1px, bo góc) |
+| `/productivity` | Tech dùng hằng ngày, setup 2022→2026, đồ nghề agentic (skill/MCP/repo/dataset), video nhúng xem tại chỗ + kênh YouTube — giao diện kiểu Notion (nền trắng, viền 1px, bo góc) |
 | `/stuff-i-make` | Phần mềm tự làm, nút tải Windows/macOS/Linux, danh sách đang làm |
 
 Menu header có 6 mục: 4 anchor của trang chủ (Giới thiệu, Dự án, Nghiên cứu, Liên hệ)
@@ -126,6 +132,24 @@ Danh sách thêm/xoá lưu trong **localStorage** của trình duyệt (`hh-watc
 hiện trên máy đó. Muốn cố định, mở hộp thoại thêm video → **“Sao chép JSON”** rồi dán vào
 `productivity.videos.groups` trong `lib/i18n.ts`. Nút **“Khôi phục danh sách gốc”** xoá
 mọi thay đổi cục bộ (kể cả nhóm tự tạo và các lần kéo-thả).
+
+### Mục “Agentic · programming use”
+
+Danh sách đồ nghề agentic: **Skill / MCP / Repo / Dataset / Khác**, có bộ lọc theo loại và
+mỗi mục là một thẻ kèm ảnh preview:
+
+- **Repo GitHub** → lấy ảnh social-preview của chính repo (`opengraph.githubassets.com`), nên
+  thẻ hiện đúng tên repo, mô tả, số star, thanh ngôn ngữ… như ảnh share của GitHub.
+- **Link YouTube** → lấy thumbnail video.
+- **Còn lại** (dataset, blog, tool…) → ô màu theo loại + avatar/favicon của site.
+
+**“+ Thêm mục”**: nhập PIN → dán link → chọn loại → tiêu đề/mô tả để trống thì tự điền:
+repo GitHub gọi `api.github.com/repos/{owner}/{repo}` để lấy tên, mô tả, star, ngôn ngữ;
+link khác lấy đoạn cuối của URL làm tiêu đề. **“×”** trên thẻ để xoá (hỏi PIN).
+
+Dữ liệu lưu ở `hh-resources-v1` trong localStorage; danh sách gốc nằm ở
+`productivity.resources.items` trong `lib/i18n.ts`. Muốn cố định mục tự thêm thì chép object
+từ localStorage vào mảng đó — nhớ đặt `id` bằng đúng `url`.
 
 Độ thành thạo làm game (Godot, Unreal, Blender, Unity) nằm ở `skills.game` và hiện thành
 một card rộng cuối mục Kỹ năng ở trang chủ.

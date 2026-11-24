@@ -24,20 +24,9 @@ export const EMPTY_STORE: WatchStore = {
   moved: {},
 };
 
+export { LOCK_MS, MAX_ATTEMPTS, verifyPin } from "./pin";
+
 const STORE_KEY = "hh-watchlist-v1";
-const PIN_SALT = "hh-watchlist-v1";
-
-/**
- * The PIN is never stored in clear text — only a salted hash is shipped.
- * SHA-256 is used when the page runs in a secure context (https / localhost);
- * a small FNV-1a fallback covers plain-http LAN addresses where
- * crypto.subtle is unavailable.
- */
-const PIN_SHA256 = "6dd2971bed04671e7feba410000e976a2feeacc58021a8f0f8d4df7d40e480f2";
-const PIN_FNV = "f943d10e";
-
-export const MAX_ATTEMPTS = 5;
-export const LOCK_MS = 30_000;
 
 const ID_RE = /^[A-Za-z0-9_-]{11}$/;
 
@@ -69,40 +58,6 @@ export function parseYouTubeId(input: string): string | null {
   }
 
   return null;
-}
-
-function weakHash(value: string): string {
-  let h = 2166136261;
-  for (let i = 0; i < value.length; i += 1) {
-    h ^= value.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h.toString(16).padStart(8, "0");
-}
-
-function toHex(buffer: ArrayBuffer): string {
-  return Array.from(new Uint8Array(buffer))
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-export async function verifyPin(pin: string): Promise<boolean> {
-  if (!/^\d{6}$/.test(pin)) return false;
-  const payload = PIN_SALT + pin;
-
-  try {
-    if (globalThis.crypto?.subtle) {
-      const digest = await globalThis.crypto.subtle.digest(
-        "SHA-256",
-        new TextEncoder().encode(payload),
-      );
-      return toHex(digest) === PIN_SHA256;
-    }
-  } catch {
-    /* fall through to the weak hash */
-  }
-
-  return weakHash(payload) === PIN_FNV;
 }
 
 export function loadWatchStore(): WatchStore {

@@ -393,7 +393,7 @@ export default function Watchlist() {
           <div className="section__head">
             <div>
               <p className="eyebrow">
-                <span className="eyebrow__num">03</span>
+                <span className="eyebrow__num">04</span>
                 {videos.label}
               </p>
               <h2 className="h2" id="videos-title">

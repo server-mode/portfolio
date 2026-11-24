@@ -3,6 +3,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import Reveal from "./reveal";
 import DeskArt from "./desk-art";
+import Resources from "./resources";
 import Watchlist from "./watchlist";
 import { useLang } from "./lang-context";
 
@@ -197,6 +198,8 @@ export default function Productivity() {
         </div>
       </section>
 
+      <Resources />
+
       <Watchlist />
 
       <section className="section section--wash" id="channels" aria-labelledby="channels-title">
@@ -205,7 +208,7 @@ export default function Productivity() {
             <div className="section__head">
               <div>
                 <p className="eyebrow">
-                  <span className="eyebrow__num">04</span>
+                  <span className="eyebrow__num">05</span>
                   {channels.label}
                 </p>
                 <h2 className="h2" id="channels-title">
